@@ -2,9 +2,9 @@ const User = require('../models/User');
 
 const authController = async (req, res) => {
   try {
-    const user = await User.create(req.body);
+    await User.create(req.body);
 
-    return res.send({ user })
+    return res.redirect('/')
   } catch(err) {
     return res.status(400).send({ error: 'Registration failed'})
   }

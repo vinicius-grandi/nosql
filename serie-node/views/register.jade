@@ -2,3 +2,15 @@ extends layout
 
 block content 
   h1 Signup
+  p Fulfill the information bellow to register your account in our site.
+  form(method="post")
+    label Name: 
+      input(type="text", name="name")
+    br
+    label Email: 
+      input(type="email", name="email")
+    br
+    label Password: 
+      input(type="password" name="password")
+    br
+    input(type="submit", value="add")
