@@ -1,8 +1,9 @@
 const User = require('../models/User');
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const crypto = require('crypto')
-const mailer = require('../../modules/mailer')
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const mailer = require('../../modules/mailer');
+const dayjs = require('dayjs');
 
 const authConfig = require('../../config/auth.json')
 
@@ -45,7 +46,15 @@ const login = async (req, res) => {
 
   user.password = undefined;
 
-  res.send({ user, token: generateToken({ id: user.id }) });
+  const info = { user, token: generateToken({ id: user.id }) }
+
+  res.cookie('login', JSON.stringify(info), {
+    secure: process.env.NODE_ENV !== 'development',
+    httpOnly: true,
+    expires: dayjs().add(1, 'day').toDate(),
+  })
+
+  res.redirect('./projects')
 }
 
 const forgotPassword = async (req, res) => {
@@ -89,7 +98,34 @@ const forgotPassword = async (req, res) => {
 }
 
 const resetPassword = async (req, res) => {
+  const { email, token, password } = req.body
+  
+  try {
+    const user = await User.findOne({ email })
+      .select('+passwordResetToken passwordResetExpires');
 
+      if (!user) {
+        return res.status(400).send('User not found');
+      }
+
+      if (token !== user.passwordResetToken) {
+        return res.status(400).send('Invalid Token');
+      }
+
+      const now = new Date();
+
+      if (now > user.passwordResetExpires) {
+        return res.status(400).send('Expired Token');
+      }
+
+      user.password = password;
+      
+      await user.save();
+
+      res.status(200).send('Login updated');
+  } catch (err) {
+    res.status(400).send({ error: 'Error on reset password' });
+  }
 }
 
 module.exports = { register, login, forgotPassword, resetPassword };

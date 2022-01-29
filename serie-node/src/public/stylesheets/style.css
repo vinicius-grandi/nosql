@@ -5,5 +5,63 @@ body {
 }
 
 a {
-  color: #00B7FF;
+  color: #0083B3;
+  text-decoration: none;
+}
+
+a:hover {
+  color: rgb(1, 68, 95);
+}
+
+header ul li {
+ display: inline; 
+ padding: 1.5rem;
+ font-size: 1.2rem;
+}
+
+
+p, h1 {
+  margin: 1rem;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+form input {
+  margin: 0.5rem;
+}
+
+form label {
+  margin: 0.5rem;
+}
+
+header ul {
+  margin: 0;
+  padding: 1.5rem;
+}
+header {
+  background-color: #ff7c01b9;
+}
+
+ul {
+  width: fit-content;
+  list-style-type: none;
+}
+.flash-message {
+  margin: 0;
+  color: rgb(9, 155, 9);
+  background-color: #30ddd42a;
+  padding: 10px;
+  font-weight: 600;
+  text-align: center;
+}
+
+button, input[type=submit] {
+  background-color: #0083B3;
+  font-weight: 600;
+  color: white;
+  border-radius: .250rem;
 }

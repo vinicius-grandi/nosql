@@ -2,23 +2,13 @@ const jwt = require('jsonwebtoken')
 const authConfig = require('../../config/auth.json')
 
 module.exports = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader) {
-    return res.send('No token provided');
+  if (JSON.stringify(req.cookies).length === 2) {
+    return res.status(400).send('No token provided');
   }
+
+  const token = JSON.parse(req.cookies.login).token;
   
-  const parts = authHeader.split(' ');
-
-  if (!parts.length === 2) {
-    return res.send('Token error');
-  }
-
-  const [ scheme, token ] = parts;
-
-  if (!/^Bearer$/.test(scheme)) {
-    return res.send('Token malformed');
-  }
+  console.log(token.length)
 
   jwt.verify(token, authConfig.secret, (err, decoded) => {
     if (err) return res.send('Invalid Tokend')
